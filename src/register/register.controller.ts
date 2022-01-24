@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Post,
   Res,
+  Module,
 } from '@nestjs/common';
 import { Response } from 'express';
 import {
@@ -19,13 +20,16 @@ import {
 } from './type';
 import { verdict_success } from '../constant';
 import { randomBytes } from 'crypto';
-import { storage, data } from './storage';
+import { Storage, data } from '../storage/storage';
 import { getToken } from '../util/jwt';
 
-export const storageInstance = new storage();
-
+@Module({
+  imports: [Storage],
+})
 @Controller('register')
 export class RegisterController {
+  constructor(private storage: Storage) {}
+
   @Post('login-info')
   saveLoginInfo(@Body() loginInfoReq: LoginInfoReq, @Res() res: Response) {
     const token = randomBytes(64).toString('hex');
@@ -36,15 +40,16 @@ export class RegisterController {
       email: loginInfoReq.email,
       password: loginInfoReq.password,
     };
-    storageInstance.addData(token, data);
-    const resp: LoginInfoResp = {
-      verdict: verdict_success,
-      message: 'success',
-      data: {
-        token: token,
-      },
-    };
-    res.status(HttpStatus.OK).json(resp);
+    this.storage.addData(token, data).then(() => {
+      const resp: LoginInfoResp = {
+        verdict: verdict_success,
+        message: 'success',
+        data: {
+          token: token,
+        },
+      };
+      res.status(HttpStatus.OK).json(resp);
+    });
   }
 
   @Post('address-info')
@@ -62,13 +67,14 @@ export class RegisterController {
       zip: addressInfoReq.address.zip,
       service_area_code: addressInfoReq.service_area_code,
     };
-    storageInstance.addData(token, data);
-    const resp: AddressInfoResp = {
-      verdict: verdict_success,
-      message: 'success',
-      data: null,
-    };
-    res.status(HttpStatus.OK).json(resp);
+    this.storage.addData(token, data).then(() => {
+      const resp: AddressInfoResp = {
+        verdict: verdict_success,
+        message: 'success',
+        data: null,
+      };
+      res.status(HttpStatus.OK).json(resp);
+    });
   }
 
   @Post('personal-info')
@@ -85,13 +91,14 @@ export class RegisterController {
       gender_details: personalInfoReq.gender_details,
       phone_number: personalInfoReq.phone_number,
     };
-    storageInstance.addData(token, data);
-    const resp: PersonalInfoResp = {
-      verdict: verdict_success,
-      message: 'success',
-      data: null,
-    };
-    res.status(HttpStatus.OK).json(resp);
+    this.storage.addData(token, data).then(() => {
+      const resp: PersonalInfoResp = {
+        verdict: verdict_success,
+        message: 'success',
+        data: null,
+      };
+      res.status(HttpStatus.OK).json(resp);
+    });
   }
 
   @Post('term-agreement')
@@ -104,13 +111,15 @@ export class RegisterController {
     const data: data = {
       term_accepted: termAgreementReq.term_accepted,
     };
-    storageInstance.addData(token, data);
-    storageInstance.persistData(token);
-    const resp: TermAgreementResp = {
-      verdict: verdict_success,
-      message: 'success',
-      data: null,
-    };
-    res.status(HttpStatus.OK).json(resp);
+    this.storage.addData(token, data).then(() => {
+      this.storage.persistData(token).then(() => {
+        const resp: TermAgreementResp = {
+          verdict: verdict_success,
+          message: 'success',
+          data: null,
+        };
+        res.status(HttpStatus.OK).json(resp);
+      });
+    });
   }
 }
