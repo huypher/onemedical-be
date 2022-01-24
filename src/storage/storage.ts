@@ -55,9 +55,7 @@ export class Storage {
       return;
     }
     const data: Array<any> = Object.values(value);
-    writeData('1ZjD6i3c2ceRnaPZNPr-WDuUAxRueKJqPzKtAeLE9so4', 'test', [
-      data,
-    ]).then(() => {
+    writeData(process.env.SHEET_ID, process.env.SHEET_PAGE, [data]).then(() => {
       this.cacheManager.del(key);
     });
   }
