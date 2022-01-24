@@ -2,7 +2,9 @@ version: '3.9'
 
 services:
   onemedical-fe:
-    image: onemedical-fe:demo5
+    image: stackoverfloww/onemedical-fe:0.1.0
+    env_file:
+      - .env
     ports:
       - "4200:80"
 
