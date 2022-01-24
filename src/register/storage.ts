@@ -24,6 +24,9 @@ export type storageField = { [key: string]: data };
 
 export class storage {
   instance: storageField;
+  email: string;
+  key: string;
+
   constructor() {
     this.instance = {};
   }
