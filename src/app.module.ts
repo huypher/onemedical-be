@@ -4,8 +4,7 @@ import { AppService } from './app.service';
 import { RegisterController } from './register/register.controller';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataEntity } from './storage/data.entity';
-import { StorageService } from './storage/storage.service';
+import DataEntity from './storage/data.entity';
 import { StorageModule } from './storage/storage.module';
 import { RegisterService } from './register/register.service';
 
@@ -26,6 +25,6 @@ import { RegisterService } from './register/register.service';
     StorageModule,
   ],
   controllers: [AppController, RegisterController],
-  providers: [AppService, StorageService, RegisterService],
+  providers: [AppService, RegisterService],
 })
 export class AppModule {}
