@@ -1,15 +1,9 @@
-import { writeData } from '../util/sheets/sheet';
-import {
-  CACHE_MANAGER,
-  CacheModule,
-  Inject,
-  Injectable,
-  Module,
-} from '@nestjs/common';
-import { Cache } from 'cache-manager';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { cacheTTL } from '../constant';
+import { Cache } from 'cache-manager';
+import { StorageService } from '../storage/storage.service';
 
-export type data = {
+export type Data = {
   first_name?: string;
   last_name?: string;
   preferred_name?: string;
@@ -29,18 +23,15 @@ export type data = {
   term_accepted?: boolean;
 };
 
-@Module({
-  imports: [CacheModule.register()],
-})
 @Injectable()
-export class Storage {
-  email: string;
-  key: string;
+export class RegisterService {
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private storageService: StorageService,
+  ) {}
 
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
-
-  async addData(key: string, data: data) {
-    const value = await this.cacheManager.get<data>(key);
+  async addData(key: string, data: Data) {
+    const value = await this.cacheManager.get<Data>(key);
     if (!value) {
       await this.cacheManager.set(key, data, { ttl: cacheTTL });
       return;
@@ -50,12 +41,11 @@ export class Storage {
   }
 
   async persistData(key: string) {
-    const value = await this.cacheManager.get<data>(key);
+    const value = await this.cacheManager.get<Data>(key);
     if (!value) {
       return;
     }
-    const data: Array<any> = Object.values(value);
-    writeData(process.env.SHEET_ID, process.env.SHEET_PAGE, [data]).then(() => {
+    this.storageService.save(value).then(() => {
       this.cacheManager.del(key);
     });
   }
