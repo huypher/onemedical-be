@@ -21,12 +21,8 @@ import {
 import { verdict_success } from '../constant';
 import { randomBytes } from 'crypto';
 import { getToken } from '../util/jwt';
-import { StorageModule } from '../storage/storage.module';
 import { Data, RegisterService } from './register.service';
 
-// @Module({
-//   imports: [StorageModule],
-// })
 @Controller('register')
 export class RegisterController {
   constructor(private registerService: RegisterService) {}

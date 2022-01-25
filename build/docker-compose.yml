@@ -11,7 +11,7 @@ services:
 
   onemedical-be:
     container_name: onemedical-be
-    image: stackoverfloww/onemedical-be:test
+    image: stackoverfloww/onemedical-be:0.2.0
     env_file:
       - .env
     ports:
@@ -22,10 +22,6 @@ services:
     image: postgres:latest
     ports:
       - "5432:5432"
-    volumes:
-      - /data/postgres:/data/postgres
     env_file:
       - .env
-    networks:
-      - postgres
 
