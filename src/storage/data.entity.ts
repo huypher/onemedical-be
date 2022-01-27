@@ -11,7 +11,7 @@ export class DataEntity {
   @Column()
   last_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   preferred_name: string;
 
   @Column()
@@ -47,7 +47,7 @@ export class DataEntity {
   @Column()
   gender: string;
 
-  @Column()
+  @Column({ nullable: true })
   gender_details: string;
 
   @Column()
