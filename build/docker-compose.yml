@@ -11,10 +11,10 @@ services:
 
   onemedical-be:
     container_name: onemedical-be
-    image: stackoverfloww/onemedical-be:0.2.0
-    build:
-      context: ..
-      dockerfile: build/Dockerfile
+    image: stackoverfloww/onemedical-be:0.3.0
+#    build:
+#      context: ..
+#      dockerfile: build/Dockerfile
     env_file:
       - .env
     ports:

@@ -5,55 +5,55 @@ export class DataEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   first_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   last_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   preferred_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   address1: string;
 
-  @Column()
+  @Column({ nullable: true })
   address2: string;
 
-  @Column()
+  @Column({ nullable: true })
   city: string;
 
-  @Column()
+  @Column({ nullable: true })
   state_code: string;
 
-  @Column()
+  @Column({ nullable: true })
   zip: string;
 
-  @Column()
+  @Column({ nullable: true })
   service_area_code: string;
 
-  @Column()
+  @Column({ nullable: true })
   date_of_birth: string;
 
-  @Column()
+  @Column({ nullable: true })
   download_link_option: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   gender: string;
 
-  @Column()
+  @Column({ nullable: true })
   gender_details: string;
 
-  @Column()
+  @Column({ nullable: true })
   phone_number: string;
 
-  @Column()
+  @Column({ nullable: true })
   term_accepted: boolean;
 }
 

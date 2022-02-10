@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import DataEntity from './storage/data.entity';
 import { StorageModule } from './storage/storage.module';
 import { RegisterService } from './register/register.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -23,6 +24,10 @@ import { RegisterService } from './register/register.service';
       synchronize: true,
     }),
     StorageModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1day' },
+    }),
   ],
   controllers: [AppController, RegisterController],
   providers: [AppService, RegisterService],

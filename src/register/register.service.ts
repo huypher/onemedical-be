@@ -1,7 +1,6 @@
-import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
-import { cacheTTL } from '../constant';
-import { Cache } from 'cache-manager';
+import { Injectable } from '@nestjs/common';
 import { StorageService } from '../storage/storage.service';
+import { UpdateResult } from 'typeorm/query-builder/result/UpdateResult';
 
 export type Data = {
   first_name?: string;
@@ -23,30 +22,21 @@ export type Data = {
   term_accepted?: boolean;
 };
 
+export type TokenPayload = {
+  id: number;
+};
+
 @Injectable()
 export class RegisterService {
-  constructor(
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
-    private storageService: StorageService,
-  ) {}
+  constructor(private storageService: StorageService) {}
 
-  async addData(key: string, data: Data) {
-    const value = await this.cacheManager.get<Data>(key);
-    if (!value) {
-      await this.cacheManager.set(key, data, { ttl: cacheTTL });
-      return;
-    }
-    const newData = { ...value, ...data };
-    await this.cacheManager.set(key, newData, { ttl: cacheTTL });
+  async save(data: Data): Promise<number> {
+    const entity = await this.storageService.save(data);
+    return entity.id;
   }
 
-  async persistData(key: string) {
-    const value = await this.cacheManager.get<Data>(key);
-    if (!value) {
-      return;
-    }
-    this.storageService.save(value).then(() => {
-      this.cacheManager.del(key);
-    });
+  async update(id: number, data: Data): Promise<UpdateResult> {
+    const updateResult = await this.storageService.update(id, data);
+    return updateResult;
   }
 }
